@@ -25,7 +25,7 @@ class Recorrido_Arbol{
             id_n++;
         }
         /* id [label= valor fillcolor="#d62728" shape="circle"]; */
-        concatena +=nodo.id + '[label= "' + nodo.valor + '" fillcolor="#d62728" shape="circle"];';
+        concatena +=nodo.id + '[label= "' + nodo.valor + " \n"+ nodo.tipo +'" fillcolor="#d62728" shape="circle"];';
         nodo.hijos.forEach(element =>{
             /* id -> id; */
             concatena+= nodo.id +'->' + id_n + ';';

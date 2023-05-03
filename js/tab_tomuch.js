@@ -13,14 +13,23 @@ function agrega_tab() {
     /*SE CREA UN BUTTON QUE ES UNA NUEVA PESTAÑA*/
     var btn = document.createElement("button");
     btn.id= "btn"+id;
+    var salto = document.createElement("br");
+
+    var btn2 = document.createElement("button");
+    btn2.id= "2btn"+id;
     /*TEXTO QUE SE VA A MOSTRAR EN LA PESTAÑA*/
     btn.appendChild(document.createTextNode("Nuevo.cs"));
+    btn2.appendChild(document.createTextNode("Abrir"));
+
     /*SE LE ASIGNA EL ESTILO DEFINIDO EN EL CSS*/
     btn.className="btn-bootstrap";
+    btn2.className="btn-bootstrap";
     /*MUESTRA EL CONTENIDO DE EL TAB*/
     btn.onclick=function(){cargar_contenido(id)};
+    btn2.onclick=function(){AbrirArchivoPrincipal(id)};
     //AGREGA LA NUEVA PESTAÑA AL DIV
     ctab.appendChild(btn);
+    ctab.appendChild(btn2);
     //DIV QUE CONTIENE_TODO EL CONTENIDO DE LAS TAB
     var etab= document.getElementById("c_entrada");
     //SE CREA UN DIV INVISIBLE PARA CADA TAB
@@ -50,7 +59,7 @@ function agrega_tab() {
     c_a.className="contenido_archivo";
     c_a.name="txtentrada";
     c_a.cols="50";
-    c_a.rows="12";
+    c_a.rows="20";
 
     div.appendChild(t3);
     div.appendChild(c_a);
@@ -119,9 +128,6 @@ function foco_color(btn) {
 }
 
 
-
-
-
 function analizar(){
 
     var centrada= document.getElementById("contenido_archivo"+publico_id);
@@ -139,6 +145,25 @@ function analizar(){
     .renderDot(graphviz);
 
     alert("analisis completado");
+}
+
+ 
+
+/*abrir archivo exixtente*/
+function AbrirArchivoPrincipal(pid){
+    var input = document.createElement('input');
+  input.type = 'file';
+
+  input.onchange = function() {
+    var file = this.files[0];
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById("contenido_archivo"+pid).value = e.target.result;
+    };
+    reader.readAsText(file);
+  };
+
+  input.click();       
 }
 
 
