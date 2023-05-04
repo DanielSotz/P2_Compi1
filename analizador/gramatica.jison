@@ -49,6 +49,7 @@
 "return"        return 'RETURN';
 
 "void"          return 'VOID';
+"main"          return 'MAIN';
 
 ":"             return 'DOSPTS';
 ","             return 'COMA';
@@ -135,10 +136,11 @@ instrucciones:
 ;
 instruccion 
     : PRINT PARIZQ expresion PARDER PTCOMA                  { $$ = new Nodo_Arbol("PRINT","");                                                    
-                                                                $$.agregarHijo($3);																
+                                                                $$.agregarHijo($3);
+                                                                $$.tipo=$3.tipo; 																
 																var texto= $$.recorrer_print($3);
                                                                 texto = texto.replace(/Ex/g, "");
-												document.getElementById("txtsalida1"+publico_id).value+=" Print: "+ texto+"\n"; }
+												document.getElementById("txtsalida1"+publico_id).value+=" "+ texto+"\n"; }
     |DECLARACION                                           { $$ = $1 }
     |ASIGNACION                                            { $$ = $1 }
     |FUNCION                                               { $$ = $1 }
@@ -148,6 +150,7 @@ instruccion
     |condWHILE                                             { $$ = $1 }
     |condDOWHILE                                           { $$ = $1 }
     |condFOR                                               { $$ = $1 }
+    |IMAIN                                                 { $$ = $1 }
     |IDENTIFICADOR INCREMENTO PTCOMA		               { $$ = new Nodo_Arbol("INCREMENTAR","");
                                                               $$.agregarHijo(new Nodo_Arbol($1,""));
                                                               $$.agregarHijo(new Nodo_Arbol("++",""));  }
@@ -161,6 +164,15 @@ instruccion
                     //errores.push(new Error_(this.$.first_line,this.$.first_column,"Sintactico","No se esperaba la expresion: " + yytext));
                     //console.log('Este es un error Sintactico: ' + yytext + ', en la linea: ' + yylineno.first_line + ', en la columna: ' + yylineno.first_column);
                     }
+;
+
+IMAIN
+    : MAIN IDENTIFICADOR PARIZQ L_exp PARDER PTCOMA              { $$ = new Nodo_Arbol("MAIN","");
+                                                                $$.agregarHijo(new Nodo_Arbol($2,""));
+                                                                $$.agregarHijo($4);}
+    | MAIN IDENTIFICADOR PARIZQ PARDER PTCOMA                   { $$ = new Nodo_Arbol("MAIN","");
+                                                                $$.agregarHijo(new Nodo_Arbol($2,""));}
+
 ;
 
 DECLARACION 
@@ -395,10 +407,12 @@ expresion
                                                 $$.agregarHijo($3); }
     | PARIZQ expresion PARDER               {$$ = new Nodo_Arbol("Ex", "");
                                                  $$.agregarHijo($2); }
-    | LOWER PARIZQ expresion PARDER         { $$ = new Nodo_Arbol("Ex", "");
-                                                 $$.agregarHijo($3);  }
-    | UPPER PARIZQ expresion PARDER         { $$ = new Nodo_Arbol("Ex", "");
-                                                 $$.agregarHijo($3); }
+    | LOWER PARIZQ expresion PARDER         { $$ = new Nodo_Arbol("Low", "");
+                                                 $$.agregarHijo($3);
+                                                 $$.tipo= $3.tipo.toLowerCase();  }
+    | UPPER PARIZQ expresion PARDER         { $$ = new Nodo_Arbol("Upper", "");
+                                                 $$.agregarHijo($3);
+                                                 $$.tipo= $3.tipo.toUpperCase();}
     | LENGTH PARIZQ expresion PARDER         { $$ = new Nodo_Arbol("Ex", "");
                                                  $$.agregarHijo($3); }
     | TRUNCATE PARIZQ expresion PARDER         { $$ = new Nodo_Arbol("Ex", "");
